@@ -5,31 +5,31 @@ import java.util.*;
 
 public class Model {
 	
-	public ArrayList<Float> temperatureData;
-	public ArrayList<Float> airspeedData;
-	public ArrayList<Float> lightData;
+	public ArrayList<Integer> temperatureData;
+	public ArrayList<Integer> airspeedData;
+	public ArrayList<Integer> lightData;
 	public ArrayList<String> timestampData;
 	public ArrayList<String> longitudeData;
 	public ArrayList<String> latitudeData;
 
 	public Model(){
-		temperatureData = new ArrayList<Float>();
-		airspeedData = new ArrayList<Float>();
-		lightData = new ArrayList<Float>();
+		temperatureData = new ArrayList<Integer>();
+		airspeedData = new ArrayList<Integer>();
+		lightData = new ArrayList<Integer>();
 		timestampData = new ArrayList<String>();
 		longitudeData = new ArrayList<String>();
 		latitudeData = new ArrayList<String>();
-		try {
+		/*try {
 			readFile("data.txt");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 		
 	}
 	
 	
-	public void readFile(String fileName) throws IOException{
+	/*public void readFile(String fileName) throws IOException{
 		BufferedReader content = new BufferedReader(new FileReader(fileName));
 		String line;
 		
@@ -68,16 +68,16 @@ public class Model {
 		}
 		content.close();
 	}
-	
-	public ArrayList<Float> getTemperatureList(){
+	*/
+	public ArrayList<Integer> getTemperatureList(){
 		return temperatureData;
 	}
 	
-	public ArrayList<Float> getAirList(){
+	public ArrayList<Integer> getAirList(){
 		return airspeedData;
 	}
 	
-	public ArrayList<Float> getLightList(){
+	public ArrayList<Integer> getLightList(){
 		return lightData;
 	}
 	
@@ -97,21 +97,20 @@ public class Model {
 		temperatureData.clear();
 		airspeedData.clear();
 		lightData.clear();
-		timestampData.clear();
-		longitudeData.clear();
-		latitudeData.clear();
+
 		
 		BufferedReader content = new BufferedReader(new FileReader(fileName));
 		String line;
 		
 		while((line = content.readLine()) != null){
+			//System.out.println(line);
 			String[] values = line.split(",");
-			temperatureData.add(Float.parseFloat(values[2]));
-			airspeedData.add(Float.parseFloat(values[1]));
-			lightData.add(Float.parseFloat(values[3]));
-			timestampData.add(values[0]);
-			longitudeData.add(values[4]);
-			latitudeData.add(values[5]);
+			if(!line.equals("")){
+				temperatureData.add(Integer.parseInt(values[0]));
+				airspeedData.add(Integer.parseInt(values[1]));
+				lightData.add(Integer.parseInt(values[2]));
+			}
+			
 			
 		}
 		

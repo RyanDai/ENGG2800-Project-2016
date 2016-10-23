@@ -55,6 +55,7 @@ public class View extends JFrame{
 	private JButton save;
 	private JPanel filePane;
 	public JPanel stripChartPane;
+	public JPanel map;
 	private String selectedFileName;
 	private DTSCTest chart;
 
@@ -76,10 +77,10 @@ public class View extends JFrame{
 		JTabbedPane tabbedPane = new JTabbedPane();
 		filePane = new JPanel();
 		JPanel digitalPane = new JPanel();
-		digitalPane.setLayout(new GridLayout(6,2));
+		digitalPane.setLayout(new GridLayout(3,3));
 		JPanel analogPane = new JPanel();
 		stripChartPane = new JPanel();
-		JPanel map = new JPanel();
+		map = new JPanel();
         tabbedPane.addTab("Digital", digitalPane);
         tabbedPane.addTab("Analog", analogPane);
         tabbedPane.addTab("stripChartPane", stripChartPane);
@@ -107,12 +108,12 @@ public class View extends JFrame{
 	
 	
 	public void add_digital(JPanel p){
-		JLabel l1 = new JLabel("Air:");
-		JLabel l2 = new JLabel("Temperature:");
+		JLabel l2 = new JLabel("Wind Speed:");
+		JLabel l1 = new JLabel("Temperature:");
 		JLabel l3 = new JLabel("Light:");
-		JLabel l4 = new JLabel("Timestamp:");
-		JLabel l5 = new JLabel("Latitude:");
-		JLabel l6 = new JLabel("Longitude:");
+		JLabel l7 = new JLabel("Degrees Celsius");
+		JLabel l8 = new JLabel("m/s");
+		JLabel l9 = new JLabel("Lux");
 		
 
 		air = new JTextField(10);
@@ -121,25 +122,17 @@ public class View extends JFrame{
 		temperature.setEditable(false);
 		light = new JTextField(10);
 		light.setEditable(false);
-		timeStamp = new JTextField(10);
-		timeStamp.setEditable(false);
-		latitude = new JTextField(10);
-		latitude.setEditable(false);
-		longitude = new JTextField(10);
-		longitude.setEditable(false);
-		
+	
 		 p.add(l1);
-         p.add(air);
-         p.add(l2);
          p.add(temperature);
+         p.add(l7);
+         p.add(l2);
+         p.add(air);
+         p.add(l8);
          p.add(l3);
          p.add(light);
-         p.add(l4);
-         p.add(timeStamp);
-         p.add(l5);
-         p.add(latitude);
-         p.add(l6);
-         p.add(longitude);
+         p.add(l9);
+
 	}
 	
 	public void add_file(JPanel p){

@@ -32,8 +32,9 @@ public class DTSCTest extends JPanel {
     private static final String TITLE = "Weather Station";
     private static final String START = "Start";
     private static final String STOP = "Stop";
-    private static final float MINMAX = 100;
-    private static final int COUNT = 100;
+    private static final float MIN = -100;
+    private static final float MAX = 1200;
+    private static final int COUNT = 30;
     private static final int FAST10 = 40;
     private static final int FAST5 = 200;
     private static final int REALTIME = FAST5 * 5;
@@ -53,9 +54,9 @@ public class DTSCTest extends JPanel {
             new DynamicTimeSeriesCollection(3, COUNT, new Second());
         dataset.setTimeBase(new Second(date));
         //0, 0, 0, 1, 1, 2011
-        dataset.addSeries(gaussianData(), 0, "Temperature");
-        dataset.addSeries(gaussianData2(), 1, "Air Speed");
-        dataset.addSeries(gaussianData3(), 2, "Light");
+        dataset.addSeries(gaussianData(), 0, "Temperature (Degrees Celsius)");
+        dataset.addSeries(gaussianData2(), 1, "Air Speed (m/s)");
+        dataset.addSeries(gaussianData3(), 2, "Light (Lux)");
         JFreeChart chart = createChart(dataset);
         data = new float[3];
 
@@ -175,8 +176,23 @@ public class DTSCTest extends JPanel {
         final XYPlot plot = result.getXYPlot();
         ValueAxis domain = plot.getDomainAxis();
         domain.setAutoRange(true);
-        ValueAxis range = plot.getRangeAxis();
-        range.setRange(-MINMAX, MINMAX);
+        ValueAxis Trange = plot.getRangeAxis();
+        Trange.setRange(-20, 50);
+        Trange.setLabel("Degrees Celsius");
+        
+        
+        
+        
+        ValueAxis Wrange = plot.getRangeAxis();
+        Wrange.setRange(0, 20);
+        Wrange.setLabel("m/s");
+        ValueAxis Lrange = plot.getRangeAxis();
+        //Lrange.setRange(0, 4000);
+        //Lrange.setLabel("Lux");
+        plot.setRangeAxis(0, Trange);
+        plot.setRangeAxis(1, Wrange);
+        plot.setRangeAxis(2, Lrange);
+
         return result;
     }
 
