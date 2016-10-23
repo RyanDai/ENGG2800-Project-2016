@@ -2,7 +2,6 @@ package gui;
 
 
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,8 +22,6 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.time.DynamicTimeSeriesCollection;
 import org.jfree.data.time.Second;
 import org.jfree.data.xy.XYDataset;
-import org.jfree.ui.ApplicationFrame;
-import org.jfree.ui.RefineryUtilities;
 
 
 
@@ -32,34 +29,33 @@ public class DTSCTest extends JPanel {
     private static final String TITLE = "Weather Station";
     private static final String START = "Start";
     private static final String STOP = "Stop";
-    private static final float MIN = -100;
-    private static final float MAX = 1200;
     private static final int COUNT = 30;
     private static final int FAST10 = 40;
     private static final int FAST5 = 200;
     private static final int REALTIME = FAST5 * 5;
-    private static final Random random = new Random();
     private Timer timer;
     private int count;
     public float[] data;
     
 
-    public DTSCTest(final String title) {
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	public DTSCTest(final String title) {
         Model model = new Model();
         View view = new View(model);
-        //Controller controller = new Controller(model, view);
         Date date = new Date();
         count = 0;
+        //Add data series to the chart
         final DynamicTimeSeriesCollection dataset =
             new DynamicTimeSeriesCollection(3, COUNT, new Second());
         dataset.setTimeBase(new Second(date));
         //0, 0, 0, 1, 1, 2011
         dataset.addSeries(gaussianData(), 0, "Temperature (Degrees Celsius)");
         dataset.addSeries(gaussianData2(), 1, "Air Speed (m/s)");
-        dataset.addSeries(gaussianData3(), 2, "Light (Lux)");
+        dataset.addSeries(gaussianData3(), 2, "Light (Lux) (x100)");
         JFreeChart chart = createChart(dataset);
         data = new float[3];
-
+        
+        //Add buttons
         final JButton run = new JButton(STOP);
         run.addActionListener(new ActionListener() {
 
@@ -83,6 +79,10 @@ public class DTSCTest extends JPanel {
         combo.addActionListener(new ActionListener() {
 
             @Override
+            /*
+             * Change speed of the chart 
+             * 
+             */
             public void actionPerformed(ActionEvent e) {
                 if ("5X speed".equals(combo.getSelectedItem())) {
                     timer.setDelay(FAST5);
@@ -105,35 +105,22 @@ public class DTSCTest extends JPanel {
 
             float[] newData = new float[3];
            
-            
             @Override
             public void actionPerformed(ActionEvent e) {
-            		/*if(model.getTemperatureList().size() != 0){
-            			newData[0] = model.getTemperatureList().get(i);
-            		} else {
-            			newData[0] = 0;
-            		}*/
-            		/*newData[0] = model.getTemperatureList().get(count);
-                    newData[1] = model.getAirList().get(count);
-                    newData[2] = model.getLightList().get(count);*/
-	            	//newData[0] = view.get_temperature_value();
-	                //newData[1] = (float) view.get_light_value();
-	                //newData[2] = (float) view.get_air_value();
             		newData[0] = data[0];
             		newData[1] = data[1];
             		newData[2] = data[2];
                     dataset.advanceTime();
                     dataset.appendData(newData);
                     count++;
-                    //System.out.println(date.toString());
-                
             }
-            
-            
         });
     }
     
-    
+    /*
+     * @para a b c:the data received
+     * set the dataset to be the data read from serial
+     * */
     public void set_data(float a, float b, float c){
     	data[0] = a;
         data[1] = b;
@@ -141,7 +128,9 @@ public class DTSCTest extends JPanel {
     }
 
     
-
+    /*
+     * Initialize the dataset before reading data in
+     */
     private float[] gaussianData() {
         float[] a = new float[COUNT];
         for (int i = 0; i < a.length; i++) {
@@ -150,8 +139,9 @@ public class DTSCTest extends JPanel {
         return a;
     }
     
-    
-
+    /*
+     * Initialize the dataset before reading data in
+     */
     private float[] gaussianData2() {
         float[] a = new float[COUNT];
         for (int i = 0; i < a.length; i++) {
@@ -160,8 +150,9 @@ public class DTSCTest extends JPanel {
         return a;
     }
     
-
-
+    /*
+     * Initialize the dataset before reading data in
+     */
     private float[] gaussianData3() {
         float[] a = new float[COUNT];
         for (int i = 0; i < a.length; i++) {
@@ -169,48 +160,28 @@ public class DTSCTest extends JPanel {
         }
         return a;
     }
-
+    
+    /*
+     * Create chart with X axis and Y axis
+     */
     private JFreeChart createChart(final XYDataset dataset) {
         final JFreeChart result = ChartFactory.createTimeSeriesChart(
             TITLE, "hh:mm:ss", "Value", dataset, true, true, false);
         final XYPlot plot = result.getXYPlot();
         ValueAxis domain = plot.getDomainAxis();
         domain.setAutoRange(true);
-        ValueAxis Trange = plot.getRangeAxis();
-        Trange.setRange(-20, 50);
-        Trange.setLabel("Degrees Celsius");
+        ValueAxis range = plot.getRangeAxis();
+        range.setRange(-20, 50);
+        range.setLabel("Degrees Celsius, m/s, Lux(x100)");
         
-        
-        
-        
-        ValueAxis Wrange = plot.getRangeAxis();
-        Wrange.setRange(0, 20);
-        Wrange.setLabel("m/s");
-        ValueAxis Lrange = plot.getRangeAxis();
-        //Lrange.setRange(0, 4000);
-        //Lrange.setLabel("Lux");
-        plot.setRangeAxis(0, Trange);
-        plot.setRangeAxis(1, Wrange);
-        plot.setRangeAxis(2, Lrange);
-
         return result;
     }
 
+    /*
+     * Start the timer of the chart
+     * */
     public void start() {
         timer.start();
     }
 
-    /*public static void main(final String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                DTSCTest demo = new DTSCTest(TITLE);
-                demo.pack();
-                RefineryUtilities.centerFrameOnScreen(demo);
-                demo.setVisible(true);
-                demo.start();
-            }
-        });
-    }*/
 }

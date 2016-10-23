@@ -2,22 +2,21 @@ package gui;
 
 import com.lynden.gmapsfx.GoogleMapView;
 import com.lynden.gmapsfx.javascript.object.GoogleMap;
+import com.lynden.gmapsfx.javascript.object.InfoWindow;
+import com.lynden.gmapsfx.javascript.object.InfoWindowOptions;
 import com.lynden.gmapsfx.javascript.object.LatLong;
 import com.lynden.gmapsfx.javascript.object.MapOptions;
 import com.lynden.gmapsfx.javascript.object.MapTypeIdEnum;
 import com.lynden.gmapsfx.javascript.object.Marker;
 import com.lynden.gmapsfx.javascript.object.MarkerOptions;
-
 import java.awt.Dimension;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+@SuppressWarnings("serial")
 public class Map extends JPanel{
-
-    //private final JFrame frame;
     private final JFXPanel jfxPanel;
     private Scene scene;
     private GoogleMapView mapComponent;
@@ -26,7 +25,7 @@ public class Map extends JPanel{
     private float longtitude;
 
     public Map() {
-
+    	//Initialize the map
     	latitude = (float) -27.50025;
     	longtitude = (float) 153.014523;
 
@@ -38,7 +37,8 @@ public class Map extends JPanel{
             mapComponent.addMapInializedListener(() -> {
 
                 LatLong center = new LatLong(-27.50025, 153.014523);
-
+                
+                //Set some properties of the map
                 MapOptions options = new MapOptions()
                         .center(center)
                         //.mapMarker(true)
@@ -53,16 +53,24 @@ public class Map extends JPanel{
 
                 map = mapComponent.createMap(options);
                 
+                //Add markers to the map
                 MarkerOptions markerOptions = new MarkerOptions();
-
                 markerOptions.position( new LatLong(latitude, longtitude) )
                             .visible(Boolean.TRUE)
                             .title("My Marker");
-                            
-
+  
                 Marker marker = new Marker( markerOptions );
-
+                
+                
+                //Add information window to the marker
+                InfoWindowOptions infoWindowOptions = new InfoWindowOptions();
+                infoWindowOptions.content("<h2>Axon building</h2>"
+                                        + "Current Location: -27.50025, 153.014523<br>");
+                InfoWindow window = new InfoWindow(infoWindowOptions);
+                window.open(map, marker);
+                
                 map.addMarker(marker);
+               
 
             });
 
@@ -71,32 +79,14 @@ public class Map extends JPanel{
 
             jfxPanel.setScene(scene);
         });
-        
-        
-
-        this.add(jfxPanel);
-        
-        
-        //frame.getContentPane().add(jfxPanel);
-        //frame.pack();
-        //frame.setVisible(true);
-        //frame.setLocationRelativeTo(null);
-        
+        this.add(jfxPanel);  
     }
     
-    
-    public void setPosition(int la, int lo){
+    /*
+     * Set the position of the marker
+     */
+    public void setPosition(float la, float lo){
     	latitude = la;
     	longtitude = lo;
     }
-
-    /**
-     * @param args the command line arguments
-     */
-    /*public static void main(String[] args) {
-        javax.swing.SwingUtilities.invokeLater(() -> {
-            new Map();
-        });
-    }*/
-
 }
